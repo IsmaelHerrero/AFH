@@ -1,0 +1,339 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Práctica de Terminales - Ismael Herrero</title>
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        /* Estilos adicionales específicos para la práctica */
+        .practice-header {
+            background: linear-gradient(135deg, #005f73 0%, #0a9396 100%);
+            color: white;
+            padding: 30px;
+            border-radius: 10px;
+            margin-bottom: 30px;
+            text-align: center;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+        }
+
+        .practice-header h1 {
+            margin-bottom: 10px;
+            font-size: 2.5em;
+        }
+
+        .practice-header p {
+            font-size: 1.1em;
+            opacity: 0.95;
+        }
+
+        .index-section {
+            background: white;
+            padding: 25px;
+            margin-bottom: 30px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+            border-left: 5px solid #0a9396;
+        }
+
+        .index-section h2 {
+            color: #005f73;
+            margin-bottom: 20px;
+        }
+
+        .index-section ol {
+            margin-left: 25px;
+            line-height: 2;
+        }
+
+        .index-section ol li {
+            padding: 5px 0;
+            color: #333;
+        }
+
+        .section-container {
+            background: white;
+            padding: 30px;
+            margin-bottom: 30px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        }
+
+        .section-container h2 {
+            color: #005f73;
+            font-size: 1.8em;
+            margin-bottom: 25px;
+            padding-bottom: 10px;
+            border-bottom: 3px solid #0a9396;
+        }
+
+        .section-container h3 {
+            color: #0a9396;
+            font-size: 1.4em;
+            margin-top: 30px;
+            margin-bottom: 15px;
+            padding-left: 10px;
+            border-left: 4px solid #94d2bd;
+        }
+
+        .section-container h4 {
+            color: #005f73;
+            font-size: 1.2em;
+            margin-top: 20px;
+            margin-bottom: 10px;
+            font-weight: bold;
+        }
+
+        .section-container p {
+            margin-bottom: 15px;
+            line-height: 1.8;
+            color: #333;
+        }
+
+        .section-container ul {
+            margin-left: 25px;
+            margin-bottom: 15px;
+            list-style-type: disc;
+        }
+
+        .section-container ul li {
+            margin-bottom: 8px;
+            line-height: 1.6;
+        }
+
+        .section-container img {
+            max-width: 100%;
+            height: auto;
+            display: block;
+            margin: 20px auto;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+            border: 2px solid #e0e0e0;
+        }
+
+        .section-container code {
+            background: #f4f4f4;
+            padding: 3px 8px;
+            border-radius: 4px;
+            font-family: 'Courier New', monospace;
+            color: #005f73;
+            font-size: 0.95em;
+            border: 1px solid #ddd;
+        }
+
+        .separator {
+            text-align: center;
+            font-weight: bold;
+            color: #0a9396;
+            font-size: 1.5em;
+            margin: 40px 0;
+            padding: 15px;
+            background: linear-gradient(90deg, transparent, #94d2bd33, transparent);
+            border-radius: 5px;
+        }
+
+        .subsection {
+            margin-left: 20px;
+            padding-left: 20px;
+            border-left: 3px solid #94d2bd;
+            margin-top: 20px;
+            margin-bottom: 20px;
+        }
+
+        .back-button {
+            display: inline-block;
+            margin-top: 30px;
+            padding: 12px 30px;
+            background-color: #0a9396;
+            color: white;
+            text-decoration: none;
+            border-radius: 8px;
+            font-weight: bold;
+            transition: all 0.3s ease;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+
+        .back-button:hover {
+            background-color: #005f73;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+        }
+
+        .img-caption {
+            text-align: center;
+            font-style: italic;
+            color: #666;
+            font-size: 0.9em;
+            margin-top: -10px;
+            margin-bottom: 20px;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="container">
+            <h1>Práctica de Terminales</h1>
+            <p>Administración Remota de Sistemas</p>
+        </div>
+    </header>
+
+    <main class="container">
+        <div class="practice-header">
+            <h1>PRÁCTICA DE TERMINALES</h1>
+            <p><strong>Realizado por:</strong> Ismael Herrero de la Torre - 2º ASIR</p>
+        </div>
+
+        <div class="index-section">
+            <h2>ÍNDICE DE CONTENIDOS</h2>
+            <ol>
+                <li>Instalar un Servidor SSH en Linux</li>
+                <li>Conexión de Escritorio Remoto en Windows y Linux Remmina</li>
+                <li>Instalar un Teamviewer en Equipo Windows, Linux y Android</li>
+            </ol>
+        </div>
+
+        <!-- SECCIÓN 1: SSH -->
+        <div class="section-container">
+            <h2>1. INSTALAR UN SERVIDOR SSH EN LINUX</h2>
+
+            <h3>Crear usuarios que puedan acceder al equipo a través del SSH (adduser)</h3>
+            <p>Lo hice en dos máquinas virtuales, servidor ubuntu (smr) y un ubuntu cliente, ambos de clase. Primero instalé el SSH server en el servidor:</p>
+            <img src="../fotos/fotosp5/ssh-install.jpg" alt="Instalación SSH Server">
+
+            <p>Comprobé que funcionase el servicio:</p>
+            <img src="../fotos/fotosp5/ssh-status.jpg" alt="Estado del servicio SSH">
+
+            <p>Y después hice el adduser: (ismaelherrero)</p>
+            <img src="../fotos/fotosp5/ssh-adduser.jpg" alt="Creación de usuario">
+
+            <h3>Instalar el servidor SSH (Ubuntu, Knoppix)</h3>
+            <p>La captura de instalación y status está en el apartado anterior.</p>
+
+            <h3>Probar con PuTTY desde Windows</h3>
+            <p>Desde Windows 11 home (máquina virtual de clase), instalé el PuTTY y lo usé para conectarme con el mismo usuario (ismaelherrero) al servidor ubuntu:</p>
+            <img src="../fotos/fotosp5/putty-config.jpg" alt="Configuración de PuTTY">
+
+            <p>Conseguí conectarme correctamente al server:</p>
+            <img src="../fotos/fotosp5/putty-conexion.jpg" alt="Conexión exitosa con PuTTY">
+
+            <h3>Probar desde otro Linux con el comando SSH</h3>
+            <p>Me conecté bien desde el ubuntu cliente al ubuntu server:</p>
+            <img src="../fotos/fotosp5/ssh-linux.jpg" alt="Conexión SSH desde Linux">
+
+            <h3>1.b - ¿Cómo se podría conectar un usuario sin tener que meter la contraseña cada vez que se conecta?</h3>
+            <p>Investigué y hay que generar una clave hash para ello, luego compartirle la clave al servidor. De hecho es bastante rápido:</p>
+
+            <p>Generé la clave en Ubuntu:</p>
+            <img src="../fotos/fotosp5/ssh-keygen.jpg" alt="Generación de clave SSH">
+
+            <p>Luego se lo compartí al servidor y entré sin meter contraseña:</p>
+            <img src="../fotos/fotosp5/ssh-sin-password.jpg" alt="Conexión SSH sin contraseña">
+        </div>
+
+        <!-- SECCIÓN 2: RDP -->
+        <div class="section-container">
+            <h2>2. CONEXIÓN DE ESCRITORIO REMOTO EN WINDOWS Y LINUX REMMINA</h2>
+
+            <h3>Levantar el servicio RDP en Windows</h3>
+            <p>Conexión cliente RDP desde:</p>
+            <ul>
+                <li>Windows</li>
+                <li>Linux (Remmina)</li>
+            </ul>
+
+            <div class="separator">═══ WINDOWS ═══</div>
+
+            <p>Desde mi máquina virtual Windows 11 establecí conexión con otra máquina Windows 10 Pro y habilité en ambos el escritorio remoto:</p>
+
+            <h4>Habilitación del escritorio remoto</h4>
+            <p>Permitiendo cualquier tipo de redes para evitar problemas por no ser una red segura o cualquier eventualidad:</p>
+            <img src="../fotos/fotosp5/rdp-habilitar.jpg" alt="Habilitación de escritorio remoto">
+
+            <p>Después inicié el escritorio remoto en Windows 11 (las máquinas configuradas con adaptador de red interna y en la misma red):</p>
+            <img src="../fotos/fotosp5/rdp-inicio.jpg" alt="Inicio de escritorio remoto">
+
+            <p>Me advirtió de que el equipo remoto podía no ser fiable y lo ignoré:</p>
+            <img src="../fotos/fotosp5/rdp-advertencia.jpg" alt="Advertencia de seguridad">
+
+            <p>Y desde el Windows 11 se me abrió el escritorio del Windows 10:</p>
+            <img src="../fotos/fotosp5/rdp-conectado.jpg" alt="Conexión RDP establecida">
+
+            <div class="separator">═══ LINUX ═══</div>
+
+            <p>Esta vez creé otro usuario en el Windows 10 para conectarse a él:</p>
+            <img src="../fotos/fotosp5/remmina-usuario.jpg" alt="Creación de usuario para Remmina">
+
+            <p>Y desde el ubuntu cliente configuré la conexión de Remmina para apuntar al Windows 10:</p>
+            <img src="../fotos/fotosp5/remmina-config.jpg" alt="Configuración de Remmina">
+
+            <p>Luego me metí a la conexión:</p>
+            <img src="../fotos/fotosp5/remmina-conexion-inicio.jpg" alt="Inicio de conexión Remmina">
+
+            <p>Y este fue el resultado:</p>
+            <img src="../fotos/fotosp5/remmina-resultado.jpg" alt="Resultado de conexión Remmina">
+        </div>
+
+        <!-- SECCIÓN 3: TEAMVIEWER -->
+        <div class="section-container">
+            <h2>3. INSTALAR UN TEAMVIEWER EN EQUIPO WINDOWS, LINUX Y ANDROID</h2>
+
+            <h3>Objetivos</h3>
+            <ul>
+                <li>Conectar a administración remota desde: Otro equipo Windows y desde otro Linux, desde móvil</li>
+                <li>Conectar en modo presentación y ver las opciones disponibles: Otro equipo Windows y desde otro Linux, desde móvil</li>
+            </ul>
+
+            <h3>Instalación en Linux</h3>
+            <p>Desde un equipo Linux descargué el archivo:</p>
+            <img src="../fotos/fotosp5/teamviewer-descarga.jpg" alt="Descarga de TeamViewer">
+
+            <p>Lo instalé desde la terminal metiéndome en el directorio Descargas y ejecutando este comando:</p>
+            <p><code>sudo dpkg -i teamviewer_15.71.4_amd64.deb</code></p>
+            <img src="../fotos/fotosp5/teamviewer-install-linux.jpg" alt="Instalación de TeamViewer en Linux">
+
+            <p>Y tras la instalación lo activé:</p>
+            <img src="../fotos/fotosp5/teamviewer-activacion.jpg" alt="Activación de TeamViewer">
+
+            <h3>Instalación en Windows</h3>
+            <p>Decidí instalar TeamViewer desde Windows 10 para conectarlo al Linux:</p>
+            <img src="../fotos/fotosp5/teamviewer-install-windows.jpg" alt="Instalación de TeamViewer en Windows">
+
+            <p>Después el procedimiento fue el mismo, me dio un número ID del equipo y una contraseña.</p>
+            <img src="../fotos/fotosp5/teamviewer-id-windows.jpg" alt="ID y contraseña de TeamViewer">
+
+            <h3>Conexión desde Linux a Windows</h3>
+            <p>Primero me conecté desde el Linux al Windows 10:</p>
+            <img src="../fotos/fotosp5/teamviewer-linux-windows.jpg" alt="Conexión desde Linux a Windows">
+
+            <p>A la izquierda se ve la máquina virtual Windows abierta y a la derecha la máquina virtual Linux con la conexión remota establecida con la de Windows:</p>
+            <img src="../fotos/fotosp5/teamviewer-conexion-lw.jpg" alt="Vista de conexión Linux-Windows">
+
+            <h3>Conexión desde Windows a Linux</h3>
+            <p>Después repetí el proceso pero a la inversa, metí el ID y contraseña del teamviewer de linux en la de Windows, pero como no funcinó, tuve que añadir la máquina a la lista de confianza y desde ahí hacer la conexión:</p>
+            <img src="../fotos/fotosp5/teamviewer-windows-confianza.jpg" alt="Conexión desde Windows a Linux">
+
+            <p>Conexión remota a Linux (izquierda máquina Windows, derecha máquina Linux):</p>
+            <img src="../fotos/fotosp5/teamviewer-windows-linux.jpg" alt="Conexión desde Windows a Linux">
+
+            <h3>Conexión desde móvil</h3>
+            <p>Después me conecté al W10 desde mi móvil (Android) en el que instalé la aplicación de TeamViewer. Primero me descargué la app:</p>
+            <img src="../fotos/fotosp5/teamviewer-app-descarga.jpg" alt="Descarga de app TeamViewer">
+
+            <p>Tras descargarla la abrí e inicié sesión con mi cuenta de TeamViewer (como hice anteriormente tanto en el Windows como en el Linux). Ya me salen los 2 dispositivos de confianza que metí previamente, el Windows y el Linux:</p>
+            <img src="../fotos/fotosp5/teamviewer-app-dispositivos.jpg" alt="Dispositivos de confianza en app">
+
+            <h4>Conexión desde el móvil a Windows:</h4>
+            <img src="../fotos/fotosp5/teamviewer-movil-windows.jpg" alt="Conexión móvil a Windows">
+
+            <h4>Conexión desde el móvil a Linux:</h4>
+            <img src="../fotos/fotosp5/teamviewer-movil-linux.jpg" alt="Conexión móvil a Linux">
+        </div>
+
+        <a href="../index.html" class="back-button">← Volver al Portfolio</a>
+    </main>
+
+    <footer>
+        <p>&copy; 2025 Ismael Herrero de la Torre. Todos los derechos reservados.</p>
+    </footer>
+</body>
+</html>
