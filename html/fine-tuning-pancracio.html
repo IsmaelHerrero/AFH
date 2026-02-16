@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Práctica de IA - Fine-Tuning Gemma 2B</title>
+    <style>
+        /* Estilos heredados de tu práctica anterior para mantener la identidad visual */
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f0f2f5;
+            color: #333;
+        }
+
+        .container {
+            width: 90%;
+            max-width: 1000px;
+            margin: auto;
+            overflow: hidden;
+        }
+
+        header {
+            background: #333;
+            color: #fff;
+            padding-top: 30px;
+            min-height: 70px;
+            border-bottom: #0a9396 3px solid;
+            margin-bottom: 30px;
+        }
+
+        header h1 {
+            text-align: center;
+            text-transform: uppercase;
+            margin: 0;
+            font-size: 24px;
+        }
+
+        header p {
+            text-align: center;
+            margin-top: 5px;
+            font-size: 14px;
+            color: #ccc;
+        }
+
+        /* Bloque de cabecera principal */
+        .practice-header {
+            background: linear-gradient(135deg, #005f73 0%, #0a9396 100%);
+            color: white;
+            padding: 30px;
+            border-radius: 10px;
+            margin-bottom: 30px;
+            text-align: center;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+        }
+
+        .practice-header h1 {
+            margin-bottom: 10px;
+            font-size: 2.5em;
+        }
+
+        .practice-header p {
+            font-size: 1.1em;
+            opacity: 0.95;
+        }
+
+        /* Índice */
+        .index-section {
+            background: white;
+            padding: 25px;
+            margin-bottom: 30px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+            border-left: 5px solid #0a9396;
+        }
+
+        .index-section h2 {
+            color: #005f73;
+            margin-bottom: 20px;
+        }
+
+        .index-section ol {
+            margin-left: 25px;
+            line-height: 2;
+        }
+
+        /* Contenedores de sección */
+        .section-container {
+            background: white;
+            padding: 30px;
+            margin-bottom: 30px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        }
+
+        .section-container h2 {
+            color: #005f73;
+            font-size: 1.8em;
+            margin-bottom: 25px;
+            padding-bottom: 10px;
+            border-bottom: 3px solid #0a9396;
+        }
+
+        .section-container h3 {
+            color: #0a9396;
+            font-size: 1.4em;
+            margin-top: 30px;
+            margin-bottom: 15px;
+            padding-left: 10px;
+            border-left: 4px solid #94d2bd;
+        }
+
+        .section-container p {
+            margin-bottom: 15px;
+            line-height: 1.8;
+            color: #333;
+        }
+
+        .section-container img {
+            max-width: 100%;
+            height: auto;
+            display: block;
+            margin: 20px auto;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+            border: 2px solid #e0e0e0;
+        }
+
+        .section-container code {
+            background: #f4f4f4;
+            padding: 3px 8px;
+            border-radius: 4px;
+            font-family: 'Courier New', monospace;
+            color: #005f73;
+            font-size: 0.95em;
+            border: 1px solid #ddd;
+        }
+
+        .separator {
+            text-align: center;
+            font-weight: bold;
+            color: #0a9396;
+            font-size: 1.5em;
+            margin: 40px 0;
+            padding: 15px;
+            background: linear-gradient(90deg, transparent, #94d2bd33, transparent);
+            border-radius: 5px;
+        }
+
+        .back-button {
+            display: inline-block;
+            margin-top: 30px;
+            padding: 12px 30px;
+            background-color: #0a9396;
+            color: white;
+            text-decoration: none;
+            border-radius: 8px;
+            font-weight: bold;
+            transition: all 0.3s ease;
+        }
+
+        .back-button:hover {
+            background-color: #005f73;
+        }
+
+        footer {
+            text-align: center;
+            padding: 20px;
+            margin-top: 40px;
+            background: #333;
+            color: white;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="container">
+            <h1>Práctica de Inteligencia Artificial</h1>
+            <p>Fine-Tuning de LLMs Locales</p>
+        </div>
+    </header>
+
+    <main class="container">
+        <div class="practice-header">
+            <h1>ENTRENAMIENTO DE IA: PROYECTO PANCRACIO</h1>
+            <p><strong>Entorno:</strong> Windows 11 Nativo con Python 3.10</p>
+        </div>
+
+        <div class="index-section">
+            <h2>ÍNDICE DE CONTENIDOS</h2>
+            <ol>
+                <li>Preparación del Entorno (Python y Venv)</li>
+                <li>Estructura de Archivos y Dataset</li>
+                <li>El Proceso de Entrenamiento (Fine-Tuning)</li>
+                <li>Pruebas de Inferencia con el Modelo Entrenado</li>
+            </ol>
+        </div>
+
+        <div class="section-container">
+            <h2>1. PREPARACIÓN DEL ENTORNO</h2>
+            <p>Para realizar esta práctica, utilizamos un equipo con Windows 11 y una tarjeta gráfica <strong>RTX 3060 (12GB VRAM)</strong>. El modelo elegido fue <strong>Google Gemma 2 2B</strong> debido a su equilibrio entre potencia y ligereza, ideal para hardware de consumo.</p>
+
+            <h3>Creación del Entorno Virtual</h3>
+            <p>Lo primero fue aislar las dependencias utilizando Python 3.10. Ejecutamos el comando para crear el entorno virtual y posteriormente activarlo.</p>
+            
+            <p>Comandos utilizados:</p>
+            <p><code>py -3.10 -m venv venv</code> para crear.</p>
+            <p><code>.\venv\Scripts\activate</code> para activar (fíjate en el indicador <em>(venv)</em> a la izquierda).</p>
+            
+            <img src="ima/Captura de pantalla 2026-02-16 130221.png" alt="Creación y activación del entorno virtual">
+        </div>
+
+        <div class="section-container">
+            <h2>2. ESTRUCTURA DE ARCHIVOS Y DATASET</h2>
+            
+            <h3>Organización del Proyecto</h3>
+            <p>La carpeta del proyecto contiene los scripts necesarios para el ciclo de vida del modelo:</p>
+            <ul>
+                <li><code>entrenar_wiki_pancracio.py</code>: Script principal de entrenamiento.</li>
+                <li><code>pancracio_knowledge.json</code>: El dataset con la información.</li>
+                <li><code>probar_conocimiento.py</code>: Script para chatear con la IA.</li>
+            </ul>
+            
+            <img src="ima/Captura de pantalla 2026-02-16 125231.png" alt="Estructura de archivos en Windows">
+
+            <h3>El Dataset: "Pancracio"</h3>
+            <p>El objetivo era enseñar a la IA sobre un personaje ficticio: <strong>Pancracio</strong>, un granjero soriano tradicional. Creamos un archivo JSON con pares de preguntas (<em>instruction</em>) y respuestas (<em>output</em>) definiendo su personalidad, opiniones sobre la tecnología y su vida en Soria.</p>
+            
+            <img src="ima/Captura de pantalla 2026-02-16 125326.png" alt="Dataset JSON de Pancracio en VS Code">
+        </div>
+
+        <div class="section-container">
+            <h2>3. EL PROCESO DE ENTRENAMIENTO (FINE-TUNING)</h2>
+            <p>Utilizamos la librería <code>transformers</code> y <code>peft</code> para realizar un entrenamiento eficiente (LoRA). El script descarga el modelo base de Google y lo adapta con nuestros datos.</p>
+
+            <h3>Ejecución del Script</h3>
+            <p>Al ejecutar <code>python entrenar_wiki_pancracio.py</code>, el sistema comenzó a procesar las épocas. En la captura se puede observar cómo la "Loss" (pérdida/error) disminuye progresivamente, lo que indica que la IA está aprendiendo.</p>
+            
+            <img src="ima/Captura de pantalla 2026-02-16 130851.png" alt="Consola mostrando el proceso de entrenamiento y la bajada de Loss">
+
+            <h3>Finalización y Guardado</h3>
+            <p>Tras completar las épocas configuradas, el modelo se guardó exitosamente en la carpeta local <code>./pancracio_conocimiento</code>, listo para ser usado.</p>
+
+            <img src="ima/Captura de pantalla 2026-02-16 130913.png" alt="Finalización del entrenamiento y guardado del modelo">
+        </div>
+
+        <div class="section-container">
+            <h2>4. PRUEBAS DE INFERENCIA</h2>
+            <p>Finalmente, utilizamos un script de inferencia interactivo para probar si el modelo realmente había aprendido los nuevos conocimientos.</p>
+
+            <h3>Código de Prueba</h3>
+            <p>El script <code>probar_conocimiento.py</code> carga el modelo base y le aplica los "adaptadores" entrenados con la información de Pancracio.</p>
+            
+            <img src="ima/Captura de pantalla 2026-02-16 125508.png" alt="Script de Python para probar el modelo">
+
+            <h3>Resultados: Chat con la IA</h3>
+            <p>El resultado fue exitoso. Al preguntar "¿Quién es Pancracio?", la IA respondió con la definición exacta del personaje soriano. También respondió coherentemente a preguntas sobre la cosecha y su opinión sobre la gente de ciudad, demostrando que el Fine-Tuning funcionó.</p>
+
+            <img src="ima/Captura de pantalla 2026-02-16 131202.png" alt="Chat final con la IA respondiendo como Pancracio">
+        </div>
+
+        <a href="#" class="back-button">← Volver al Inicio</a>
+    </main>
+
+    <footer>
+        <p>&copy; 2026 Práctica de IA - Ismael Herrero. Todos los derechos reservados.</p>
+    </footer>
+</body>
+</html>
