@@ -3,281 +3,166 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Tarea Agente - Fundamentos del Hardware</title>
+    <title>Manual Técnico: Despliegue de Agente IA con OpenCode y LM Studio</title>
     <style>
-        /* Variables y Reset */
-        :root {
-            --primary-color: #2563eb;
-            --text-dark: #1e293b;
-            --text-gray: #64748b;
-            --bg-color: #dfe6e9; /* Fondo gris oscuro */
-            --card-bg: #ffffff;
-        }
-
         body {
-            font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
-            background-color: var(--bg-color);
-            color: var(--text-dark);
-            margin: 0;
-            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             line-height: 1.6;
-        }
-
-        /* Contenedor Principal */
-        .container {
-            max-width: 900px;
+            color: #2c3e50;
+            max-width: 950px;
             margin: 0 auto;
-            padding: 20px;
-        }
-
-        /* Estilo de Tarjetas */
-        .card {
-            background-color: var(--card-bg);
-            border-radius: 16px;
             padding: 40px;
-            margin-bottom: 30px;
-            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
-            border: 1px solid rgba(226, 232, 240, 0.8);
-            transition: transform 0.2s ease;
+            background-color: #f8f9fa;
         }
-
-        /* AJUSTES PORTADA */
-        .portada {
+        header {
             text-align: center;
-            /* CAMBIO AQUÍ: Reducido el padding vertical de 80px a 40px */
-            padding: 40px 20px; 
-            background: linear-gradient(135deg, #ffffff 0%, #eef2ff 100%);
-            border-bottom: 4px solid var(--primary-color);
-        }
-
-        .portada h1 {
-            font-size: 3rem;
-            margin-bottom: 0px; 
-            line-height: 1.1;
-            color: #0f172a;
-        }
-
-        .portada h2 {
-            font-size: 1.5rem;
-            margin-top: 5px; 
-            color: var(--text-gray);
-            font-weight: 400;
-        }
-
-        .author-line {
-            margin-top: 10px;
-            font-weight: 600;
-            color: var(--primary-color);
-        }
-
-        /* Índice */
-        .indice-container {
-            background-color: var(--card-bg);
-            padding: 30px;
-            border-radius: 12px;
             margin-bottom: 40px;
+            border-bottom: 3px solid #3498db;
+            padding-bottom: 20px;
         }
-
-        .indice-title {
-            font-size: 1.25rem;
-            font-weight: bold;
-            margin-bottom: 15px;
-            border-bottom: 2px solid #e2e8f0;
-            padding-bottom: 10px;
-        }
-
-        .indice-list {
-            list-style: none;
-            padding: 0;
-        }
-
-        .indice-list li {
+        h1 {
+            color: #2c3e50;
             margin-bottom: 10px;
         }
-
-        .indice-list a {
-            text-decoration: none;
-            color: var(--primary-color);
-            font-weight: 500;
-            transition: color 0.2s;
-            display: flex;
-            align-items: center;
+        .subtitle {
+            color: #7f8c8d;
+            font-size: 1.2em;
+            font-weight: 300;
         }
-
-        .indice-list a:before {
-            content: "➜";
-            margin-right: 10px;
-            font-size: 0.8em;
+        section {
+            background: #ffffff;
+            padding: 30px;
+            margin-bottom: 30px;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+            transition: transform 0.2s;
         }
-
-        .indice-list a:hover {
-            color: #1e40af;
-            text-decoration: underline;
+        section:hover {
+            transform: translateY(-2px);
         }
-
-        /* Tipografía de Encabezados */
-        h1.section-title {
-            font-size: 1.8rem;
-            color: var(--primary-color);
+        h2 {
+            color: #2980b9;
+            border-left: 5px solid #3498db;
+            padding-left: 15px;
             margin-top: 0;
-            margin-bottom: 25px;
-            display: flex;
-            align-items: center;
         }
-
         h3 {
-            color: #334155;
-            margin-top: 25px;
+            color: #34495e;
+            margin-top: 20px;
         }
-
-        /* Listas y Texto */
-        ul {
-            padding-left: 20px;
+        p {
+            margin-bottom: 15px;
+            text-align: justify;
         }
-
-        li {
-            margin-bottom: 8px;
-        }
-
         .highlight {
-            background-color: #eff6ff;
-            color: #1d4ed8;
-            padding: 2px 6px;
-            border-radius: 4px;
-            font-weight: 600;
-            font-family: monospace;
+            background-color: #e8f4f8;
+            padding: 15px;
+            border-radius: 6px;
+            border-left: 4px solid #1abc9c;
+            margin: 15px 0;
         }
-
-        /* Imágenes ajustadas */
-        .img-wrapper {
-            margin: 25px auto; 
-            display: table;    
-            background-color: #f8fafc;
-            padding: 7px;      
-            border-radius: 8px;
-            border: 1px dashed #cbd5e1;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+        .hardware-note {
+            background-color: #fff3cd;
+            border-left: 4px solid #f1c40f;
+            padding: 15px;
+            color: #856404;
         }
-
         img {
             max-width: 100%;
             height: auto;
-            border-radius: 6px;
-            display: block; 
-        }
-        
-        /* Código */
-        pre {
-            background-color: #1e1e1e;
-            color: #d4d4d4;
-            padding: 15px;
+            display: block;
+            margin: 20px auto;
+            border: 1px solid #dee2e6;
             border-radius: 8px;
-            overflow-x: auto;
-            font-size: 0.9rem;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
+        code {
+            background-color: #f1f2f6;
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-family: 'Consolas', 'Monaco', monospace;
+            color: #c0392b;
+            font-size: 0.95em;
+        }
+        ul {
+            padding-left: 20px;
+        }
+        li {
+            margin-bottom: 10px;
         }
     </style>
 </head>
 <body>
 
-    <div class="card portada">
-        <h1>Tarea Agente</h1>
-        <h2>Ampliación de Fundamentos del Hardware</h2>
+    <header>
+        <h1>Manual de Despliegue de Agente IA Local</h1>
+        <p class="subtitle">Ampliación de Fundamentos del Hardware e Integración con OpenCode</p>
+    </header>
+
+    <section>
+        <h2>1. Selección del Modelo y Entorno de Hardware</h2>
+        <p>Para la realización de esta tarea, se ha seleccionado el modelo <strong>Qwen 2.5 Coder 3B Instruct</strong>. Esta elección no es arbitraria, sino que responde a criterios técnicos específicos relacionados con el hardware disponible:</p>
         
-        <div style="margin-top: 20px;">
-            <p style="margin: 0; color: #64748b;">Implementación Local con LM Studio y OpenCode</p>
-        </div>
-    </div>
-
-    <div class="container">
-
-        <div class="card indice-container">
-            <div class="indice-title">Índice de Contenidos</div>
-            <ul class="indice-list">
-                <li><a href="#seleccion">1. Selección del modelo y entorno</a></li>
-                <li><a href="#configuracion">2. Configuración de LM Studio</a></li>
-                <li><a href="#integracion">3. Integración con OpenCode</a></li>
-                <li><a href="#pruebas">4. Pruebas Interactivas</a></li>
-            </ul>
+        <div class="hardware-note">
+            <strong>Justificación del Hardware:</strong>
+            <p>Se ha optado por un modelo "ligero" (3 billones de parámetros) pensando en entornos físicos con limitaciones, como tarjetas gráficas <strong>NVIDIA 3050 Ti con 4GB de VRAM</strong>. Un modelo más grande excedería la memoria de video, obligando al sistema a usar la memoria RAM convencional, lo cual es aproximadamente <strong>20 veces más lento</strong>.</p>
         </div>
 
-        <div id="seleccion" class="card">
-            <h1 class="section-title">1. Selección del Modelo y Entorno</h1>
-            <p>Para la realización de esta práctica, hemos seleccionado el modelo de Inteligencia Artificial <strong>Qwen 2.5 Coder 3B Instruct</strong>. Esta decisión se fundamenta en los siguientes criterios técnicos:</p>
-            
-            <ul>
-                <li><strong>Especialización:</strong> El modelo tiene un rendimiento excepcional en tareas de codificación (Coding).</li>
-                <li><strong>Eficiencia y Tamaño:</strong> Es un modelo compacto ("3B" o 3 billones de parámetros) ideal para entornos locales con recursos limitados.</li>
-                <li><strong>Hardware Disponible:</strong> Trabajamos con una tarjeta gráfica <span class="highlight">NVIDIA 3050 Ti</span> con 4GB de VRAM. Un modelo ligero es imperativo para evitar saturar la memoria de video.</li>
-                <li><strong>Herramientas:</strong>
-                    <ul>
-                        <li><span class="highlight">LM Studio</span>: Para desplegar el servidor de inferencia localmente y gestionar la carga del modelo.</li>
-                        <li><span class="highlight">OpenCode</span>: Actuará como el agente cliente, interactuando con la API local expuesta por LM Studio.</li>
-                    </ul>
-                </li>
-            </ul>
+        <p>El objetivo es mantener todo el proceso dentro de la GPU para garantizar fluidez en la generación de código.</p>
+        <img src="im/image5.png" alt="Selección del modelo Qwen 3B Coder en LM Studio">
+    </section>
+
+    <section>
+        <h2>2. Configuración Avanzada en LM Studio</h2>
+        <p>Para maximizar el rendimiento y evitar errores durante conversaciones largas, se han aplicado las siguientes configuraciones críticas en el servidor local:</p>
+        
+        <ul>
+            <li><strong>Context Length (Longitud de Contexto):</strong> Ajustado a <code>12288 tokens</code>. Aunque el modelo soporta más, limitarlo ayuda a mantener el consumo de VRAM bajo control y evita desbordamientos de memoria.</li>
+            <li><strong>GPU Offload:</strong> Configurado al máximo para asegurar que las capas del modelo se procesen en la tarjeta gráfica.</li>
+            <li><strong>Server Port:</strong> Se establece el puerto <code>1234</code> para la escucha de peticiones.</li>
+        </ul>
+
+        <img src="im/image4.png" alt="Configuración de contexto y descarga a GPU">
+        
+        <div class="highlight">
+            <p><strong>Configuración de Red:</strong> Es vital desactivar la autenticación y asegurar el puerto correcto para facilitar la conexión sin barreras desde el entorno de desarrollo local.</p>
         </div>
+        <img src="im/image1.png" alt="Puerto del servidor 1234 sin autenticación">
+    </section>
 
-        <div id="configuracion" class="card">
-            <h1 class="section-title">2. Configuración LM Studio</h1>
-            <p>Para maximizar el rendimiento y asegurar que el modelo corra completamente en la GPU (evitando la lentitud de la memoria RAM del sistema), hemos aplicado la siguiente configuración:</p>
+    <section>
+        <h2>3. Integración con OpenCode (El Agente)</h2>
+        <p>La integración se realiza mediante un archivo de configuración JSON llamado <code>opencode.json</code>. Este paso es fundamental porque actúa como un <strong>intermediario o "trick"</strong>:</p>
+        <p>OpenCode está diseñado por defecto para consultar a la API de OpenAI en la nube. Mediante este archivo, "engañamos" al agente redirigiendo sus peticiones a <code>localhost</code> (nuestra máquina). LM Studio emula la estructura de respuestas de OpenAI, permitiendo que el agente funcione offline.</p>
+        
+        <h3>Configuración del archivo opencode.json:</h3>
+        <ul>
+            <li><strong>BaseURL:</strong> <code>http://localhost:1234/v1</code> (Apunta a nuestro LM Studio).</li>
+            <li><strong>Provider:</strong> Se define como compatible con OpenAI.</li>
+            <li><strong>Model ID:</strong> Se especifica el nombre interno del modelo cargado localmente.</li>
+        </ul>
+        <img src="im/image7.png" alt="Código JSON de configuración en OpenCode">
+    </section>
 
-            <div style="background-color: #f8fafc; padding: 15px; border-radius: 8px; border-left: 4px solid var(--primary-color);">
-                <ul style="list-style: none; padding-left: 10px; margin: 0;">
-                    <li><strong>Preset:</strong> Qwen2.5-Coder-3B-Instruct</li>
-                    <li><strong>Context Length:</strong> 12288 tokens (Mantiene el consumo de VRAM bajo control para evitar desbordamientos).</li>
-                    <li><strong>GPU Offload:</strong> MAX (Toda la carga a la GPU).</li>
-                    <li><strong>Server Port:</strong> 1234</li>
-                </ul>
-            </div>
+    <section>
+        <h2>4. Validación y Pruebas Interactivas</h2>
+        <p>Una vez conectado, el modelo actúa como un <strong>Agente Especializado</strong>. En este caso, se le ha asignado un rol de asistencia para el "Área Financiera y Contabilidad (AFH)", aunque sus capacidades de código son generales.</p>
+        
+        <h3>Prueba de Identidad:</h3>
+        <p>Verificamos que el agente está activo y entiende su contexto mediante un chat directo:</p>
+        <img src="im/image3.png" alt="Chat de verificación de estado del servidor local">
 
-            <p style="margin-top: 15px;">Hemos limitado el contexto a <strong>12288 tokens</strong> para prevenir errores de memoria durante conversaciones largas. Además, configuramos el servidor local para escuchar en el puerto estándar <code>1234</code>.</p>
+        <h3>Prueba de Generación de Código:</h3>
+        <p>Se solicitó al agente crear una estructura web HTML sobre animales. El modelo <strong>Qwen Coder</strong> demuestra su capacidad generando sintaxis limpia y funcional instantáneamente.</p>
+        <img src="im/image6.png" alt="Generación de código HTML por el agente">
+    </section>
 
-            <div class="img-wrapper">
-                <img src="imagen/image3.png" alt="Configuración de Contexto y GPU en LM Studio">
-            </div>
-
-            <div class="img-wrapper">
-                <img src="imagen/image1.png" alt="Configuración del Puerto del Servidor">
-            </div>
-        </div>
-
-        <div id="integracion" class="card">
-            <h1 class="section-title">3. Integración con OpenCode</h1>
-            <p>Para conectar el agente (OpenCode) con nuestra IA local, necesitamos redirigir las peticiones que normalmente irían a OpenAI hacia nuestra máquina.</p>
-            
-            <h3>Configuración del `opencode.json`</h3>
-            <p>Creamos un archivo de configuración para modificar el <em>endpoint</em>. Dado que LM Studio emula la estructura de respuestas de OpenAI, podemos "engañar" al agente para que crea que habla con GPT-4, cuando en realidad se comunica con nuestro <code>localhost</code>.</p>
-
-            <div class="img-wrapper">
-                <img src="imagen/image6.png" alt="Código JSON de configuración">
-            </div>
-
-            <h3>Selección del Modelo en el Agente</h3>
-            <p>Una vez configurado y conectado al servidor, podemos seleccionar nuestro modelo personalizado (etiquetado en el ejemplo como <span class="highlight">Qwen 3B Coder</span>) directamente desde la interfaz gráfica de OpenCode.</p>
-
-            <div class="img-wrapper">
-                <img src="imagen/image4.png" alt="Selección de modelo en OpenCode">
-            </div>
-        </div>
-
-        <div id="pruebas" class="card">
-            <h1 class="section-title">4. Pruebas Interactivas</h1>
-            <p>Finalmente, validamos el funcionamiento del agente mediante diversos <em>prompts</em>. A pesar de ser un modelo enfocado en código, verificamos su capacidad de interacción general y resolución de problemas.</p>
-
-            <h3>Prueba de Interacción (Chat)</h3>
-            <p>Se verifica que el agente responde coherentemente y reconoce su propósito.</p>
-            <div class="img-wrapper">
-                <img src="imagen/image2.png" alt="Chat de prueba con el agente">
-            </div>
-
-            <h3>Prueba de Generación de Código</h3>
-            <p>Le solicitamos generar una página web sobre animales. El modelo respondió generando correctamente la estructura HTML y CSS solicitada.</p>
-            <div class="img-wrapper">
-                <img src="imagen/image5.png" alt="Generación de código HTML">
-            </div>
-        </div>
-
-    </div>
+    <section>
+        <h2>5. Monitorización y Prueba de Ejecución</h2>
+        <p>Para confirmar que la tarea se está ejecutando realmente en el hardware local y no en la nube, monitoreamos el historial de la GPU.</p>
+        <p>En la siguiente captura (tomada en un entorno Apple Silicon M4 utilizado para la demostración en clase), se observan los picos de actividad en la GPU integrada correspondientes a los momentos de inferencia (generación de texto) del agente.</p>
+        <img src="im/image2.png" alt="Monitor de actividad de GPU Apple M4 mostrando carga de trabajo">
+    </section>
 
 </body>
 </html>
