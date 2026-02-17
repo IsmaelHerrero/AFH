@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Manual Técnico: Pre-entrenamiento de IA con GPT-2</title>
+    <style>
+        body { font-family: 'Segoe UI', sans-serif; line-height: 1.6; color: #333; max-width: 1000px; margin: 0 auto; padding: 20px; background-color: #f5f7fa; }
+        header { background-color: #002451; color: white; padding: 40px; text-align: center; border-radius: 10px; margin-bottom: 30px; }
+        .step { background: white; padding: 25px; border-radius: 10px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); margin-bottom: 40px; }
+        h2 { color: #002451; border-bottom: 2px solid #7285b7; padding-bottom: 10px; }
+        h3 { color: #444; margin-top: 20px; }
+        .img-container { text-align: center; margin: 20px 0; padding: 15px; background: #f9f9f9; border-radius: 8px; border: 1px solid #ddd; }
+        img { max-width: 100%; height: auto; border-radius: 4px; box-shadow: 0 2px 4px rgba(0,0,0,0.2); }
+        .caption { display: block; margin-top: 10px; font-size: 0.9em; color: #666; font-style: italic; }
+        pre { background: #2d2d2d; color: #f8f8f2; padding: 15px; border-radius: 6px; overflow-x: auto; font-size: 14px; }
+        code { font-family: 'Consolas', monospace; background: #eef1f7; padding: 2px 5px; border-radius: 3px; color: #d63384; }
+        .info-panel { background: #e7f3ff; border-left: 5px solid #2196f3; padding: 15px; margin: 20px 0; }
+    </style>
+</head>
+<body>
+
+<header>
+    <h1>Manual de Pre-entrenamiento de IA</h1>
+    <p>Ajuste Fino de GPT-2 para el dominio del lenguaje cervantino</p>
+</header>
+
+<section class="step">
+    <h2>1. Preparación de la Fuente de Datos</h2>
+    <p>El primer paso consiste en obtener el corpus lingüístico. En este caso, se utiliza la obra <em>Don Quijote de la Mancha</em> del Proyecto Gutenberg. Es fundamental utilizar la versión en <strong>Plain Text UTF-8</strong> para asegurar que la IA procese correctamente caracteres como la "ñ" o las tildes.</p>
+    
+    <div class="img-container">
+        <img src="i/image4.png" alt="Archivo fuente pg2000.txt">
+        <span class="caption">Localización del archivo fuente descargado: pg2000.txt</span>
+    </div>
+
+    <div class="info-panel">
+        <strong>Detalle técnico:</strong> El archivo original tiene un tamaño de aproximadamente 2,174 KB. Este volumen de texto es suficiente para un entrenamiento de "ajuste fino" (fine-tuning) sobre un modelo que ya entiende el español básico.
+    </div>
+</section>
+
+<section class="step">
+    <h2>2. Limpieza y Normalización del Texto</h2>
+    <p>Los archivos del Proyecto Gutenberg contienen metadatos, licencias y prefacios que no forman parte de la novela y "contaminarían" el aprendizaje de la IA. Para ello, se emplea el script <code>entrenar.py</code> (basado en la lógica de destilación).</p>
+    
+    <h3>El proceso de limpieza:</h3>
+    <ul>
+        <li>El script lee el archivo completo (2,130,021 caracteres originalmente).</li>
+        <li>Busca marcadores de inicio y fin para extraer solo el cuerpo de la novela.</li>
+        <li>Elimina cabeceras y pies de página de Gutenberg de forma automática.</li>
+    </ul>
+
+    <div class="img-container">
+        <img src="i/image1.png" alt="Log de ejecución del script de limpieza">
+        <span class="caption">Resultado de la limpieza: se han eliminado las cabeceras y el tamaño se ha reducido a 2,110,329 caracteres.</span>
+    </div>
+
+    <div class="img-container">
+        <img src="i/image7.png" alt="Archivo limpio don_quijote_limpio.txt">
+        <span class="caption">Generación del nuevo archivo de entrenamiento: don_quijote_limpio.txt.</span>
+    </div>
+</section>
+
+<section class="step">
+    <h2>3. Ejecución del Entrenamiento</h2>
+    <p>Se utiliza el modelo base <code>DeepESP/gpt2-spanish</code>. El entrenamiento se configura para procesar el texto en bloques de 128 tokens, ideal para un equilibrio entre velocidad y contexto en hardware estándar.</p>
+
+    <div class="img-container">
+        <img src="i/image3.png" alt="Métricas de entrenamiento en la terminal">
+        <span class="caption">Monitorización del entrenamiento: se observa un descenso del 'loss' (pérdida) desde 3.96 a 2.81, indicando un aprendizaje efectivo.</span>
+    </div>
+
+    <h3>Métricas clave observadas:</h3>
+    <ul>
+        <li><strong>Epochs (Épocas):</strong> Se realizaron 3 pasadas completas sobre el texto.</li>
+        <li><strong>Tiempo total:</strong> Aproximadamente 15 minutos y 46 segundos para completar el proceso en 6441 iteraciones.</li>
+        <li><strong>Guardado:</strong> Al finalizar, el "nuevo cerebro" se almacena en el directorio <code>./modelo_quijote_entrenado</code>.</li>
+    </ul>
+</section>
+
+<section class="step">
+    <h2>4. Validación: La IA después del entrenamiento</h2>
+    <p>Tras el pre-entrenamiento, la IA no solo conoce los nombres de los personajes, sino que ha adoptado el estilo narrativo de Cervantes, utilizando arcaísmos y estructuras gramaticales propias de la época.</p>
+
+    <h3>Prueba 1: Identidad de Sancho Panza</h3>
+    <div class="img-container">
+        <img src="i/image5.png" alt="Prueba Sancho Panza">
+        <span class="caption">La IA completa la frase sobre Sancho manteniendo el tratamiento de "vuestra merced" y el tono respetuoso del escudero.</span>
+    </div>
+
+    <h3>Prueba 2: Identidad de Dulcinea</h3>
+    <div class="img-container">
+        <img src="i/image6.png" alt="Prueba Dulcinea">
+        <span class="caption">Ante la pregunta sobre Dulcinea, la IA genera referencias a "la labradora de sus pensamientos", término exacto utilizado por Don Quijote en la obra.</span>
+    </div>
+</section>
+
+<footer style="text-align: center; margin-top: 50px; color: #888;">
+    <p>Manual técnico generado para el proyecto de IA cervantina</p>
+</footer>
+
+</body>
+</html>
