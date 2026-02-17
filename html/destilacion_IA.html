@@ -1,0 +1,299 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Manual Técnico: Destilación de LLMs (Completo)</title>
+    <style>
+        :root {
+            --primary: #2563eb;
+            --dark: #1e293b;
+            --light: #f8fafc;
+            --code-bg: #1e1e1e;
+            --border: #e2e8f0;
+            --success: #16a34a;
+            --warning: #ca8a04;
+        }
+
+        body {
+            font-family: 'Segoe UI', system-ui, sans-serif;
+            line-height: 1.6;
+            color: #334155;
+            background-color: #f1f5f9;
+            margin: 0;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            background: white;
+            padding: 40px;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+        }
+
+        h1 {
+            color: var(--dark);
+            border-bottom: 3px solid var(--primary);
+            padding-bottom: 10px;
+            font-size: 2.2rem;
+        }
+
+        h2 {
+            color: var(--dark);
+            margin-top: 2.5rem;
+            display: flex;
+            align-items: center;
+            font-size: 1.5rem;
+        }
+
+        h2::before {
+            content: '';
+            display: inline-block;
+            width: 8px;
+            height: 25px;
+            background-color: var(--primary);
+            margin-right: 10px;
+            border-radius: 4px;
+        }
+
+        h3 {
+            color: #475569;
+            margin-top: 1.5rem;
+            border-bottom: 1px dashed #cbd5e1;
+            padding-bottom: 5px;
+        }
+
+        p {
+            margin-bottom: 1rem;
+            text-align: justify;
+        }
+
+        .step-box {
+            background-color: var(--light);
+            border: 1px solid var(--border);
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+        }
+
+        /* Código */
+        pre {
+            background-color: var(--code-bg);
+            color: #d4d4d4;
+            padding: 15px;
+            border-radius: 6px;
+            overflow-x: auto;
+            font-family: 'Consolas', monospace;
+            font-size: 0.9rem;
+        }
+
+        code {
+            font-family: 'Consolas', monospace;
+            background-color: #e2e8f0;
+            padding: 2px 4px;
+            border-radius: 4px;
+            color: #d63384;
+        }
+
+        /* Imágenes */
+        .img-container {
+            text-align: center;
+            margin: 20px 0;
+            padding: 10px;
+            background: #fff;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            transition: transform 0.2s;
+        }
+
+        .img-container:hover {
+            transform: scale(1.01);
+            border-color: var(--primary);
+        }
+
+        img {
+            max-width: 100%;
+            height: auto;
+            border-radius: 4px;
+        }
+
+        .caption {
+            display: block;
+            margin-top: 8px;
+            font-size: 0.85rem;
+            color: #64748b;
+            font-style: italic;
+        }
+
+        /* Alertas y Notas */
+        .alert {
+            background-color: #eff6ff;
+            border-left: 4px solid var(--primary);
+            padding: 15px;
+            margin: 15px 0;
+            color: #1e40af;
+        }
+
+        .comparison-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            margin-top: 20px;
+        }
+
+        @media (max-width: 768px) {
+            .comparison-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+
+    <header>
+        <h1>Manual de Destilación de Modelos IA</h1>
+        <p>Guía técnica para transferir conocimiento de un modelo <strong>Teacher (GPT-Medium)</strong> a un modelo <strong>Student (GPT-Small)</strong>, optimizando la velocidad y reduciendo el consumo de recursos.</p>
+    </header>
+
+    <section id="step0">
+        <h2>Paso 0: Configuración del Entorno</h2>
+        <p>Antes de comenzar con el código de destilación, es fundamental preparar el entorno de Python instalando las dependencias necesarias como <code>transformers</code>, <code>torch</code>, <code>datasets</code> y <code>accelerate</code>.</p>
+
+        <div class="step-box">
+            <h3>0.1 Instalación de Librerías</h3>
+            <p>El gestor de paquetes PIP descargará todas las dependencias. Es un proceso que puede tardar unos minutos dependiendo de la velocidad de conexión.</p>
+            <div class="img-container">
+                <img src="ig/image15.png" alt="Descarga de librerías via PIP">
+                <span class="caption">Fig 1. Descarga e instalación de paquetes necesarios (Fuente: image15.png)</span>
+            </div>
+
+            <h3>0.2 Verificación y Actualización</h3>
+            <p>Es recomendable mantener <code>pip</code> actualizado para evitar conflictos de versiones. Aquí vemos la finalización exitosa de la instalación y la actualización del gestor.</p>
+            <div class="img-container">
+                <img src="ig/image11.png" alt="Actualización de PIP y éxito">
+                <span class="caption">Fig 2. Entorno configurado correctamente (Fuente: image11.png)</span>
+            </div>
+        </div>
+    </section>
+
+    <section id="step1">
+        <h2>Paso 1: Preparación del Script (Teacher-Student)</h2>
+        <p>Preparamos el script <code>destilacion.py</code>. El objetivo es configurar la arquitectura donde el modelo pequeño aprenderá a imitar los <em>logits</em> (probabilidades) del modelo grande.</p>
+
+        <div class="step-box">
+            <h3>1.1 Definición de Modelos y Dataset</h3>
+            <p>Cargamos el dataset <em>ag_news</em> y lo recortamos a 5,000 muestras para viabilidad en CPU. Se inicializan ambos modelos: el maestro (GPT2-Medium) y el estudiante (GPT2).</p>
+            <div class="img-container">
+                <img src="ig/image2.png" alt="Código: Imports y Dataset">
+                <span class="caption">Fig 3. Configuración inicial del script (Fuente: image2.png)</span>
+            </div>
+        </div>
+
+        <div class="step-box">
+            <h3>1.2 Función de Pérdida (Loss)</h3>
+            <p>Sobrescribimos el <code>Trainer</code> para usar la <strong>Divergencia KL</strong>. Esto es lo que técnicamente define la "destilación": minimizar la diferencia entre lo que piensa el profesor y lo que piensa el alumno.</p>
+            <div class="img-container">
+                <img src="ig/image6.png" alt="Código: DistillationTrainer">
+                <span class="caption">Fig 4. Lógica de destilación en el Trainer (Fuente: image6.png)</span>
+            </div>
+        </div>
+    </section>
+
+    <section id="step2">
+        <h2>Paso 2: Ejecución del Entrenamiento</h2>
+        <p>Lanzamos el proceso. El sistema primero procesará el texto y luego comenzará las épocas de entrenamiento.</p>
+
+        <div class="step-box">
+            <h3>2.1 Tokenización y Mapeo</h3>
+            <p>Antes de entrenar, el dataset se convierte en tokens numéricos. Aquí vemos la velocidad de procesamiento (examples/s) antes de iniciar el bucle de entrenamiento.</p>
+            <div class="img-container">
+                <img src="ig/image16.png" alt="Procesamiento del dataset">
+                <span class="caption">Fig 5. Velocidad de tokenización del dataset (Fuente: image16.png)</span>
+            </div>
+        </div>
+
+        <div class="step-box">
+            <h3>2.2 Progreso de la Pérdida (Loss)</h3>
+            <p>Durante el entrenamiento, observamos cómo disminuye el valor de <code>loss</code>. Inicialmente alta, baja progresivamente indicando que el estudiante está aprendiendo patrones.</p>
+            <div class="img-container">
+                <img src="ig/image10.png" alt="Barra de progreso del entrenamiento">
+                <span class="caption">Fig 6. Reducción de la pérdida a lo largo de las iteraciones (Fuente: image10.png)</span>
+            </div>
+        </div>
+    </section>
+
+    <section id="step3">
+        <h2>Paso 3: Validación Numérica</h2>
+        <p>Una vez finalizado, debemos cuantificar qué tan "bueno" es el modelo resultante.</p>
+        
+        <div class="comparison-grid">
+            <div class="step-box">
+                <h3>Perplejidad (PPL)</h3>
+                <p>Indica la confusión del modelo. <strong>62.11</strong> es un resultado decente para un modelo tan pequeño (Student).</p>
+                <img src="ig/image5.png" alt="Resultado PPL">
+            </div>
+            <div class="step-box">
+                <h3>Divergencia KL</h3>
+                <p>La distancia matemática con el profesor es de <strong>24.98</strong>, indicando una aproximación razonable pero no perfecta.</p>
+                <img src="ig/image1.png" alt="Resultado KL">
+            </div>
+        </div>
+    </section>
+
+    <section id="step4">
+        <h2>Paso 4: Análisis Visual de Resultados</h2>
+        <p>Las métricas numéricas no lo dicen todo. Las siguientes gráficas ilustran el compromiso real entre velocidad y calidad.</p>
+
+        <div class="step-box">
+            <h3>4.1 Comparativa de Velocidad (Eficiencia)</h3>
+            <p>Aquí es donde brilla la destilación. El modelo destilado (verde) es <strong>más del doble de rápido</strong> que el original (azul), superando los 100 tokens por segundo frente a los aprox. 45 del maestro.</p>
+            <div class="img-container">
+                <img src="ig/image12.png" alt="Gráfica de tokens por segundo">
+                <span class="caption">Fig 7. El modelo Student es drásticamente más eficiente (Fuente: image12.png)</span>
+            </div>
+        </div>
+
+        <div class="step-box">
+            <h3>4.2 Comparativa de Calidad (Aciertos)</h3>
+            <p>El coste de la velocidad es la inteligencia. En una batería de 10 preguntas técnicas:
+            <ul>
+                <li><strong>Teacher (Azul):</strong> Responde correctamente a la mayoría (línea alta).</li>
+                <li><strong>Student (Naranja):</strong> Falla frecuentemente, acertando solo 3 de 10 preguntas.</li>
+            </ul>
+            </p>
+            <div class="img-container">
+                <img src="ig/image14.png" alt="Gráfica de aciertos por pregunta">
+                <span class="caption">Fig 8. Caída significativa en la capacidad de razonamiento complejo (Fuente: image14.png)</span>
+            </div>
+        </div>
+    </section>
+
+    <section id="step5">
+        <h2>Paso 5: Conversión a GGUF y Despliegue</h2>
+        <p>Para usar el modelo localmente fuera de Python (ej. en LM Studio), necesitamos el formato GGUF.</p>
+
+        <div class="step-box">
+            <h3>5.1 Preparación de Llama.cpp</h3>
+            <p>Utilizamos el repositorio <code>llama.cpp</code>. Es importante ubicar el script <code>convert_hf_to_gguf.py</code> dentro de la carpeta raíz.</p>
+            <div class="img-container">
+                <img src="ig/image13.png" alt="Directorio de llama.cpp">
+                <span class="caption">Fig 9. Estructura necesaria para ejecutar la conversión (Fuente: image13.png)</span>
+            </div>
+
+            <h3>5.2 Conversión Exitosa</h3>
+            <p>Ejecutamos el script apuntando a nuestra carpeta del modelo. El resultado es un archivo <code>.gguf</code> altamente optimizado.</p>
+            <div class="img-container">
+                <img src="ig/image3.png" alt="Log de conversión">
+                <span class="caption">Fig 10. Generación del archivo final GGUF (Fuente: image3.png)</span>
+            </div>
+        </div>
+    </section>
+
+</div>
+
+</body>
+</html>
