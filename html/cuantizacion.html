@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Documentación Técnica: Cuantización de LLM con AutoAWQ</title>
+    <style>
+        :root {
+            --primary-bg: #1e1e1e;
+            --secondary-bg: #252526;
+            --text-main: #d4d4d4;
+            --text-heading: #569cd6;
+            --accent: #4ec9b0;
+            --code-bg: #1e1e1e;
+            --border: #3c3c3c;
+            --success: #6a9955;
+        }
+
+        body {
+            font-family: 'Segoe UI', system-ui, sans-serif;
+            background-color: var(--primary-bg);
+            color: var(--text-main);
+            line-height: 1.7;
+            margin: 0;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            background-color: var(--secondary-bg);
+            padding: 40px;
+            border-radius: 8px;
+            box-shadow: 0 0 20px rgba(0,0,0,0.5);
+        }
+
+        h1 {
+            color: var(--text-heading);
+            border-bottom: 2px solid var(--border);
+            padding-bottom: 15px;
+        }
+
+        h2 {
+            color: var(--accent);
+            margin-top: 40px;
+            border-left: 4px solid var(--text-heading);
+            padding-left: 15px;
+        }
+
+        h3 {
+            color: #dcdcaa;
+        }
+
+        p {
+            margin-bottom: 15px;
+        }
+
+        code {
+            font-family: 'Consolas', monospace;
+            background-color: #333;
+            padding: 2px 6px;
+            border-radius: 4px;
+            color: #ce9178;
+        }
+
+        pre {
+            background-color: #121212;
+            padding: 15px;
+            border-radius: 6px;
+            overflow-x: auto;
+            border: 1px solid var(--border);
+        }
+
+        .image-container {
+            margin: 25px 0;
+            text-align: center;
+            background-color: #1a1a1a;
+            padding: 10px;
+            border-radius: 8px;
+            border: 1px solid var(--border);
+        }
+
+        img {
+            max-width: 100%;
+            height: auto;
+            border-radius: 4px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.3);
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+
+        img:hover {
+            transform: scale(1.02);
+        }
+
+        .caption {
+            display: block;
+            margin-top: 10px;
+            font-size: 0.9em;
+            color: #888;
+            font-style: italic;
+        }
+
+        .alert {
+            background-color: rgba(255, 0, 0, 0.1);
+            border-left: 4px solid #f44336;
+            padding: 15px;
+            margin: 20px 0;
+        }
+
+        .specs {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin-bottom: 30px;
+        }
+
+        .spec-card {
+            background-color: #333;
+            padding: 15px;
+            border-radius: 6px;
+            text-align: center;
+        }
+        
+        .spec-value {
+            font-size: 1.2em;
+            font-weight: bold;
+            color: var(--accent);
+            display: block;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <header>
+        <h1>Manual Técnico: Cuantización de LLM Local (AutoAWQ)</h1>
+        <p>Documentación del proceso de conversión de Mistral-7B a formato optimizado INT4 para hardware de consumo.</p>
+    </header>
+
+    <div class="specs">
+        <div class="spec-card">
+            <span class="spec-value">NVIDIA RTX 3060</span>
+            Hardware (12GB VRAM)
+        </div>
+        <div class="spec-card">
+            <span class="spec-value">Mistral-7B-v0.3</span>
+            Modelo Base
+        </div>
+        <div class="spec-card">
+            <span class="spec-value">~15 GB ➔ 3.8 GB</span>
+            Reducción de Peso
+        </div>
+        <div class="spec-card">
+            <span class="spec-value">AutoAWQ</span>
+            Algoritmo
+        </div>
+    </div>
+
+    <section>
+        <h2>1. Configuración del Entorno de Desarrollo</h2>
+        <p>El primer paso crítico para evitar conflictos con las librerías del sistema operativo es la creación de un <strong>Entorno Virtual (venv)</strong>. Esto aísla las dependencias específicas de IA (PyTorch, AutoAWQ) del resto del sistema Windows.</p>
+        
+        <p>Como se observa en la terminal, utilizamos el comando <code>python -m venv venv</code> seguido de la activación mediante el script en PowerShell.</p>
+
+        <div class="image-container">
+            <img src="imag/Captura de pantalla 2026-02-16 134708.png" alt="Creación del entorno virtual">
+            <span class="caption">Fig 1. Creación y activación del entorno virtual en Windows (PowerShell).</span>
+        </div>
+    </section>
+
+    <section>
+        <h2>2. Gestión de Dependencias y Versiones</h2>
+        <p>Uno de los mayores desafíos en la IA local es la compatibilidad entre versiones (Dependency Hell). Para este proyecto, fue necesario realizar una instalación manual y secuencial para evitar conflictos conocidos entre <strong>NumPy 2.0</strong> y <strong>PyTorch 2.4+</strong> con AutoAWQ.</p>
+
+        <h3>Estrategia de Instalación:</h3>
+        <ol>
+            <li>Actualización de <code>pip</code> para garantizar la descarga de binarios precompilados (wheels).</li>
+            <li>Instalación forzada de <strong>PyTorch 2.3.1</strong> con soporte CUDA 12.1.</li>
+            <li>Downgrade de <strong>Transformers</strong> a la versión 4.41.2 para compatibilidad con AWQ.</li>
+        </ol>
+
+        <div class="image-container">
+            <img src="imag/Captura de pantalla 2026-02-16 134337.png" alt="Script de instalación de dependencias">
+            <span class="caption">Fig 2. Comandos utilizados para la instalación de librerías base.</span>
+        </div>
+
+        <p>Tras resolver los conflictos de versiones, la instalación finalizó correctamente, dejando el entorno listo con <code>autoawq</code>, <code>torch</code> y <code>accelerate</code> operativos.</p>
+
+        <div class="image-container">
+            <img src="imag/Captura de pantalla 2026-02-16 135412.png" alt="Instalación exitosa">
+            <span class="caption">Fig 3. Verificación de instalación exitosa de AutoAWQ 0.2.6 y dependencias.</span>
+        </div>
+    </section>
+
+    <section>
+        <h2>3. El Código de Cuantización</h2>
+        <p>Se desarrolló un script de Python (<code>quantizar_minstral.py</code>) encargado de todo el proceso. Este script utiliza la librería <code>AutoAWQForCausalLM</code>.</p>
+        
+        <h3>Configuración clave del script:</h3>
+        <ul>
+            <li><strong>q_group_size: 128:</strong> Define el tamaño del bloque para la cuantización, equilibrando precisión y velocidad.</li>
+            <li><strong>w_bit: 4:</strong> Reduce el peso de cada parámetro de 16 bits a 4 bits.</li>
+            <li><strong>version: GEMM:</strong> Utiliza núcleos optimizados para matrices generales, ideales para tarjetas NVIDIA RTX.</li>
+        </ul>
+
+        <div class="image-container">
+            <img src="imag/Captura de pantalla 2026-02-16 160246.png" alt="Código fuente del script de cuantización">
+            <span class="caption">Fig 4. Código fuente configurado para descargar y cuantizar Mistral-7B.</span>
+        </div>
+    </section>
+
+    <section>
+        <h2>4. Ejecución: Descarga y Procesamiento</h2>
+        <p>Al ejecutar el script, el sistema conecta con Hugging Face. Dado que es un modelo "Instruct" de 7 Billones de parámetros, la descarga inicial en precisión media (FP16) consta de aproximadamente <strong>14.5 GB</strong> fragmentados en varios archivos <code>.safetensors</code>.</p>
+
+        <div class="image-container">
+            <img src="imag/Captura de pantalla 2026-02-16 151758.png" alt="Descarga del modelo original">
+            <span class="caption">Fig 5. Descarga de los shards (fragmentos) del modelo original (aprox 15GB).</span>
+        </div>
+
+        <p>Una vez descargado, AutoAWQ carga el modelo en la RAM del sistema y utiliza la GPU RTX 3060 para calcular la "importancia" de los pesos (Activation Awareness). Este proceso comprime el modelo reduciendo drásticamente su tamaño sin destruir su capacidad de razonamiento.</p>
+
+        <div class="image-container">
+            <img src="imag/Captura de pantalla 2026-02-16 155318.png" alt="Proceso de cuantización finalizado">
+            <span class="caption">Fig 6. Finalización del proceso de cuantización y guardado en disco local.</span>
+        </div>
+    </section>
+
+    <section>
+        <h2>5. Verificación de Resultados</h2>
+        <p>El resultado es una nueva carpeta que contiene el modelo totalmente autónomo. A diferencia del original, este modelo optimizado ocupa únicamente <strong>3.8 GB</strong>, lo que permite cargarlo completamente en la VRAM de la RTX 3060 (12GB), dejando espacio de sobra para el contexto de la conversación (memoria a corto plazo).</p>
+
+        <div class="image-container">
+            <img src="imag/Captura de pantalla 2026-02-16 160130.png" alt="Estructura de carpetas del proyecto">
+            <span class="caption">Fig 7. Estructura del directorio con el entorno virtual y la carpeta de salida.</span>
+        </div>
+
+        <p>Dentro de la carpeta generada, observamos el archivo <code>model.safetensors</code> único, junto con los archivos de configuración y el tokenizador necesarios para la inferencia.</p>
+
+        <div class="image-container">
+            <img src="imag/Captura de pantalla 2026-02-16 160148.png" alt="Contenido de la carpeta del modelo cuantizado">
+            <span class="caption">Fig 8. Archivos finales del modelo cuantizado listo para su uso.</span>
+        </div>
+    </section>
+
+    <section>
+        <h2>6. Pruebas de Inferencia (Chatbot)</h2>
+        <p>Para validar el modelo, creamos el script <code>probar_cuantizacion.py</code>. Este script incluye dos optimizaciones fundamentales:</p>
+        <ul>
+            <li><strong>Layer Fusion:</strong> Fusiona capas del modelo para reducir el número de operaciones en la GPU, acelerando la respuesta.</li>
+            <li><strong>Streaming:</strong> Utiliza <code>TextStreamer</code> para generar texto palabra por palabra, mejorando la experiencia de usuario.</li>
+        </ul>
+
+        <div class="image-container">
+            <img src="imag/Captura de pantalla 2026-02-16 160211.png" alt="Código del script de prueba">
+            <span class="caption">Fig 9. Script de inferencia con soporte para templates de chat e historial.</span>
+        </div>
+
+        <h3>Resultado Final</h3>
+        <p>En la prueba final, se le pidió al modelo explicar un tema histórico complejo ("Carlos II de la corona hispánica"). El modelo respondió con precisión, coherencia y velocidad, confirmando que la cuantización a 4 bits mantuvo la integridad del conocimiento del modelo original.</p>
+
+        <div class="image-container">
+            <img src="imag/Captura de pantalla 2026-02-16 160036.png" alt="Chat final funcionando">
+            <span class="caption">Fig 10. Prueba de funcionamiento exitosa. El modelo responde fluidamente en español.</span>
+        </div>
+    </section>
+
+</div>
+
+</body>
+</html>
