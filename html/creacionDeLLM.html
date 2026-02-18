@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Manual Completo: Creación de ChefBot LLM</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            max-width: 950px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f4f4f9;
+        }
+        h1 {
+            text-align: center;
+            color: #2c3e50;
+            border-bottom: 2px solid #3498db;
+            padding-bottom: 20px;
+            margin-bottom: 30px;
+        }
+        h2 {
+            color: #2980b9;
+            margin-top: 50px;
+            border-left: 5px solid #3498db;
+            padding-left: 15px;
+            background-color: #eaf2f8;
+            padding-top: 10px;
+            padding-bottom: 10px;
+        }
+        h3 {
+            color: #16a085;
+            margin-top: 30px;
+            border-bottom: 1px solid #ddd;
+            padding-bottom: 5px;
+        }
+        p {
+            margin-bottom: 15px;
+            text-align: justify;
+        }
+        .step {
+            background: #fff;
+            padding: 25px;
+            margin-bottom: 30px;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        img {
+            display: block;
+            max-width: 100%;
+            height: auto;
+            margin: 20px auto;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+        }
+        code {
+            background-color: #f0f0f0;
+            padding: 2px 5px;
+            border-radius: 3px;
+            font-family: 'Consolas', 'Courier New', monospace;
+            color: #c0392b;
+            font-size: 0.95em;
+        }
+        .caption {
+            text-align: center;
+            font-size: 0.9em;
+            color: #666;
+            margin-top: -10px;
+            margin-bottom: 20px;
+            font-style: italic;
+        }
+        footer {
+            text-align: center;
+            margin-top: 50px;
+            padding: 20px;
+            border-top: 1px solid #ddd;
+            color: #777;
+        }
+    </style>
+</head>
+<body>
+
+    <h1>Documentación Técnica: Creación de ChefBot (Creación de un LLM)</h1>
+    <p>Este manual documenta paso a paso el proceso de creación, entrenamiento y despliegue de <strong>ChefBot</strong>, un modelo de lenguaje ajustado (Fine-Tuned) para actuar como experto culinario, utilizando tecnología LoRA y cuantización de 4 bits.</p>
+
+    <div class="step">
+        <h2>1. Configuración del Entorno de Trabajo</h2>
+        <p>El primer paso consistió en preparar el directorio de trabajo y aislar las dependencias del proyecto.</p>
+
+        <h3>Creación del Entorno Virtual</h3>
+        <p>Navegamos al directorio del proyecto y creamos un entorno virtual de Python para mantener limpias las instalaciones.</p>
+        <img src="iges/image16.png" alt="Navegación al directorio">
+        <p class="caption">Navegación al directorio del proyecto.</p>
+        
+        <img src="iges/image11.png" alt="Creación del venv">
+        <p class="caption">Comando para crear el entorno virtual (venv).</p>
+
+        <h3>Activación del Entorno</h3>
+        <p>Una vez creado, se activó el entorno virtual. Esto se verifica al ver <code>(venv)</code> al inicio de la línea de comandos.</p>
+        <img src="iges/image19.png" alt="Activación del venv">
+
+        <h3>Instalación de PyTorch y CUDA</h3>
+        <p>Para aprovechar la GPU NVIDIA RTX 5060, se instaló la versión "nightly" de PyTorch compatible con CUDA 13.x.</p>
+        <img src="iges/image10.png" alt="Instalación de librerías">
+        
+        <h3>Verificación del Stack Tecnológico</h3>
+        <p>Antes de proceder, validamos que Python pudiera acceder a la GPU. Mediante un script de comprobación, confirmamos que la versión de Torch (2.12.0.dev) detecta correctamente CUDA y reconoce la tarjeta <strong>NVIDIA GeForce RTX 5060 Laptop GPU</strong> con arquitecturas soportadas hasta sm_120.</p>
+        <img src="iges/image22.png" alt="Script de verificación de GPU y CUDA">
+        <p class="caption">Validación exitosa de la disponibilidad de CUDA y detección del hardware.</p>
+    </div>
+
+    <div class="step">
+        <h2>2. Generación y Validación del Dataset</h2>
+        <p>El modelo necesita datos de calidad para aprender su nuevo rol.</p>
+        
+        <h3>Script de Generación</h3>
+        <p>Se ejecutó el script <code>generar_dataset.py</code> para crear un conjunto de datos sintético.</p>
+        <img src="iges/image3.png" alt="Ejecución de generar_dataset.py">
+        
+        <h3>Estructura del Dataset</h3>
+        <p>El archivo generado <code>recetas_chefbot_500.jsonl</code> contiene pares de "instrucción" y "output". Aquí podemos ver cómo el modelo aprenderá a responder peticiones específicas de cocina, como recetas keto o menús completos.</p>
+        <img src="iges/image13.jpg" alt="Contenido del archivo JSONL">
+        <p class="caption">Vista previa de los datos de entrenamiento (formato JSONL).</p>
+    </div>
+
+    <div class="step">
+        <h2>3. Entrenamiento del Modelo</h2>
+        <p>Esta es la fase crítica donde el modelo base aprende los nuevos conocimientos.</p>
+
+        <h3>Configuración del Entrenamiento</h3>
+        <p>En el script <code>train_chefbot.py</code>, se configura el modelo base <code>Microsoft/Phi-3-mini-4k-instruct</code>. Se utiliza <strong>QLoRA</strong> (configuración de 4 bits con <code>BitsAndBytesConfig</code>) para reducir el consumo de memoria y permitir el entrenamiento en una GPU de laptop.</p>
+        <img src="iges/image18.png" alt="Código de configuración de entrenamiento">
+        <p class="caption">Configuración de carga en 4 bits y selección del modelo base.</p>
+
+        <h3>Ejecución del Entrenamiento</h3>
+        <p>Al lanzar el script, se observa cómo cargan los pesos y comienza el descenso de la pérdida (loss), indicando que el modelo está aprendiendo.</p>
+        <img src="iges/image15.png" alt="Inicio del entrenamiento en consola">
+
+        <h3>Monitorización de Hardware</h3>
+        <p>Durante el proceso, el Administrador de Tareas confirma que la <strong>NVIDIA GeForce RTX 5060</strong> está siendo utilizada al 100% de su capacidad de cómputo, con un uso de VRAM cercano a los 3.8 GB, lo cual confirma la eficiencia de la cuantización de 4 bits.</p>
+        <img src="iges/image20.png" alt="Uso de GPU al 100%">
+
+        <h3>Finalización</h3>
+        <p>El entrenamiento concluye exitosamente tras completar las 500 iteraciones (epochs configuradas).</p>
+        <img src="iges/image12.png" alt="Entrenamiento al 100%">
+
+        <h3>Artefactos Resultantes</h3>
+        <p>Como resultado, se genera la carpeta <code>chefbot-lora</code>, que contiene los adaptadores (pesos entrenados) y los checkpoints del proceso.</p>
+        <img src="iges/image14.png" alt="Carpeta chefbot-lora con checkpoints">
+    </div>
+
+    <div class="step">
+        <h2>4. Fusión del Modelo (Merge)</h2>
+        <p>Para facilitar el uso, fusionamos los adaptadores LoRA con el modelo base.</p>
+
+        <h3>Proceso de Fusión</h3>
+        <p>El script de fusión carga el modelo base y le aplica los cambios aprendidos permanentemente.</p>
+        <img src="iges/image1.png" alt="Código de fusión">
+        <img src="iges/image9.png" alt="Consola Merge completado">
+
+        <h3>Modelo Final</h3>
+        <p>En la carpeta <code>chefbot-merged</code> obtenemos el modelo final listo para producción, incluyendo el archivo <code>model.safetensors</code> de ~7.4 GB (modelo completo).</p>
+        <img src="iges/image17.png" alt="Archivos del modelo fusionado">
+    </div>
+
+    <div class="step">
+        <h2>5. Pruebas de Inferencia</h2>
+        <p>Finalmente, interactuamos con el ChefBot terminado para verificar tanto su conocimiento como sus restricciones.</p>
+
+        <h3>Código de Chat</h3>
+        <p>El sistema incluye instrucciones estrictas (System Prompt) para mantener al bot en personaje.</p>
+        <img src="iges/image2.png" alt="Código del chat">
+
+        <h3>Validación de Respuestas de Dominio (Happy Path)</h3>
+        <p>Se realizó una prueba funcional para verificar que el modelo adquirió conocimientos culinarios. Al preguntar "¿qué puedo hacer con patatas?" y pedir consejos sobre asado, ChefBot respondió con sugerencias coherentes, técnicas precisas y el tono servicial definido en el entrenamiento.</p>
+        <img src="iges/image21.png" alt="Chat mostrando respuestas de recetas correctas">
+        <p class="caption">Interacción exitosa: ChefBot ofrece recetas y técnicas de cocina.</p>
+
+        <h3>Prueba de Seguridad (Guardrails)</h3>
+        <p>Se probó la robustez del modelo intentando hacer preguntas técnicas fuera de contexto (sobre puertos DNS). El modelo identificó correctamente que eso no corresponde a su rol y rechazó la respuesta amablemente, reafirmando su identidad como ChefBot.</p>
+        <img src="iges/image8.png" alt="Chat rechazando preguntas técnicas">
+        <p class="caption">Interacción de seguridad: El modelo se niega a responder temas no culinarios.</p>
+    </div>
+
+    <footer>
+        <p><strong>Proyecto ChefBot</strong></p>
+    </footer>
+
+</body>
+</html>
